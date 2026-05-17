@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Alifam Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="on">
+  <div class="lbox">
+    <div class="llogo"><div class="ldot"><i class="fas fa-shield-alt"></i></div>Alifam Hub Admin</div>
+    <div class="ltitle">Bienvenue, cher Administrateur.</div>
+    <div class="lsub">Veuillez entrer vos informations pour continuer</div>
+    <div class="lform">
+      <input class="linput" type="email" id="adEmail" placeholder="Email administrateur" autocomplete="email">
+      <input class="linput" type="password" id="adPass" placeholder="Mot de passe" autocomplete="current-password">
+      <div class="lerr" id="adErr"></div>
+      <button class="lbtn" id="adBtn"><i class="fas fa-lock"></i> Se connecter</button>
+    </div>
+    <div class="lwarn"><i class="fas fa-exclamation-triangle"></i>Page Admin.</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage">
+  <div class="mobov" id="mobov"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sbrand"><div class="sbd"><i class="fas fa-shield-alt"></i></div><div><div class="sbt">Alifam Hub Admin</div><div class="sbs">Tableau de bord</div></div></div>
+    <nav class="sbnav">
+      <div class="sbsec">Principal</div>
+      <div class="sbl active" data-p="dashboard" onclick="sp('dashboard')"><i class="fas fa-th-large"></i> Tableau de bord</div>
+      <div class="sbl" data-p="products" onclick="sp('products')"><i class="fas fa-box"></i> Produits <span class="sbbadge" id="sbpc">0</span></div>
+      <div class="sbsec">Modération</div>
+      <div class="sbl" data-p="reviews" onclick="sp('reviews')"><i class="fas fa-star"></i> Avis produits <span class="sbbadge-red" id="sbrev" style="display:none">!</span></div>
+      <div class="sbl" data-p="shopreviews" onclick="sp('shopreviews')"><i class="fas fa-comments"></i> Avis boutique <span class="sbbadge-red" id="sbshoprev" style="display:none">!</span></div>
+      <div class="sbsec">Gestion</div>
+      <div class="sbl" data-p="promos" onclick="sp('promos')"><i class="fas fa-percent"></i> Codes Promo</div>
+      <div class="sbl" data-p="users" onclick="sp('users')"><i class="fas fa-users"></i> Utilisateurs <span class="sbbadge-blue" id="sbuc">0</span></div>
+      <div class="sbl" data-p="admins" onclick="sp('admins')" id="sbAdminLink" style="display:none"><i class="fas fa-user-shield"></i> Administrateurs</div>
+      <div class="sbsec">Personnalisation</div>
+      <div class="sbl" data-p="categories" onclick="sp('categories')"><i class="fas fa-th-large"></i> Catégories <span class="sbbadge" id="sbcatc">0</span></div>
+      <div class="sbl" data-p="shopinfo" onclick="sp('shopinfo')"><i class="fas fa-store"></i> Infos boutique</div>
+    </nav>
+    <div class="sbfoot"><div class="sbuser"><div class="sbav" id="sbav">A</div><div class="sbemail" id="sbemail">—</div><button class="sblogout" id="sblogout" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></button></div></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:11px">
+        <button class="burgeradm" id="burgeradm"><span></span><span></span><span></span></button>
+        <div class="tbtitle" id="tbtitle">Tableau de bord</div>
+      </div>
+      <div class="tbacts">
+        <button class="tibtn" id="themeadm"><i class="fas fa-moon" id="admti"></i></button>
+        <button class="btn bto" id="topAddBtn" onclick="openPM()"><i class="fas fa-plus"></i> Nouveau produit</button>
+        <a href="https://anx-578r.onrender.com/#produits" class="btn btg" target="_blank"><i class="fas fa-external-link-alt"></i> Boutique</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="statgrid">
+          <div class="statcard"><div class="stic sto"><i class="fas fa-box"></i></div><div><div class="stval" id="stp">—</div><div class="stlbl">Produits</div></div></div>
+          <div class="statcard"><div class="stic stb"><i class="fas fa-users"></i></div><div><div class="stval" id="stu">—</div><div class="stlbl">Utilisateurs</div></div></div>
+          <div class="statcard"><div class="stic stg"><i class="fas fa-star"></i></div><div><div class="stval" id="starev">—</div><div class="stlbl">Avis en attente</div></div></div>
+          <div class="statcard"><div class="stic sty"><i class="fas fa-percent"></i></div><div><div class="stval" id="stpr">—</div><div class="stlbl">Codes promo</div></div></div>
+        </div>
+        <div class="seccard">
+          <div class="sechdr"><h3>Produits récents</h3><button class="btn bto" onclick="sp('products');openPM()" style="padding:6px 11px;font-size:.77rem"><i class="fas fa-plus"></i> Ajouter</button></div>
+          <div id="dashprod"><div class="emptystate"><div class="spin"></div></div></div>
+        </div>
+        <div class="seccard" style="margin-top:16px">
+          <div class="sechdr"><h3>Avis en attente de modération</h3><button class="btn btb" onclick="sp('reviews')" style="padding:6px 11px;font-size:.77rem"><i class="fas fa-eye"></i> Voir tout</button></div>
+          <div id="dashReviews"><div class="emptystate"><i class="fas fa-star-half-alt"></i><p>Aucun avis en attente.</p></div></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="panel" id="panel-products">
+        <div class="seccard">
+          <div class="sechdr"><h3>Gestion des Produits</h3><button class="btn bto" onclick="openPM()"><i class="fas fa-plus"></i> Nouveau produit</button></div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="prodtbl"><tr><td colspan="5"><div class="emptystate"><div class="spin"></div></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- AVIS PRODUITS -->
+      <div class="panel" id="panel-reviews">
+        <div class="seccard">
+          <div class="sechdr">
+            <h3><i class="fas fa-star" style="color:var(--yellow);margin-right:7px"></i>Modération des avis produits</h3>
+            <div class="tab-row" id="reviewTabRow">
+              <button class="tab-btn on" onclick="filterReviews('pending')">En attente</button>
+              <button class="tab-btn" onclick="filterReviews('approved')">Approuvés</button>
+              <button class="tab-btn" onclick="filterReviews('all')">Tous</button>
+            </div>
+          </div>
+          <div class="secbody" id="reviewsList"><div class="emptystate"><div class="spin"></div><p>Chargement…</p></div></div>
+        </div>
+      </div>
+
+      <!-- AVIS BOUTIQUE -->
+      <div class="panel" id="panel-shopreviews">
+        <div class="seccard">
+          <div class="sechdr">
+            <h3><i class="fas fa-comments" style="color:var(--blue);margin-right:7px"></i>Avis sur la boutique</h3>
+            <div class="tab-row">
+              <button class="tab-btn on" onclick="filterShopReviews('pending')">En attente</button>
+              <button class="tab-btn" onclick="filterShopReviews('approved')">Approuvés</button>
+              <button class="tab-btn" onclick="filterShopReviews('all')">Tous</button>
+            </div>
+          </div>
+          <div class="secbody" id="shopReviewsList"><div class="emptystate"><div class="spin"></div><p>Chargement…</p></div></div>
+        </div>
+      </div>
+
+      <!-- PROMOS -->
+      <div class="panel" id="panel-promos">
+        <div class="seccard">
+          <div class="sechdr"><h3>Codes Promo</h3><button class="btn bto" onclick="openPromoM()"><i class="fas fa-plus"></i> Nouveau code</button></div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>Code</th><th>Réduction</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="promotbl"><tr><td colspan="4"><div class="emptystate"><div class="spin"></div></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="panel" id="panel-users">
+        <div class="seccard">
+          <div class="sechdr">
+            <h3>Utilisateurs inscrits</h3>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="text" id="userSearch" placeholder="Rechercher…" style="padding:6px 11px;font-size:.8rem;width:180px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none">
+              <span style="font-size:.77rem;color:var(--text3)">Temps réel</span>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>Utilisateur</th><th>Email</th><th>Dernière connexion</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="userstbl"><tr><td colspan="5"><div class="emptystate"><div class="spin"></div></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFOS BOUTIQUE -->
+      <div class="panel" id="panel-shopinfo">
+        <div class="seccard">
+          <div class="sechdr"><h3><i class="fas fa-store" style="color:var(--a);margin-right:7px"></i>Informations de la boutique</h3></div>
+          <div class="secbody">
+            <p style="font-size:.83rem;color:var(--text2);margin-bottom:18px;line-height:1.65">Ces informations s'affichent en temps réel sur la boutique dès que vous enregistrez.</p>
+            <div class="info-grid">
+              <div class="frow"><label>Nom de la boutique</label><input type="text" id="shopName" placeholder="Ex: Alifam Hub "></div>
+              <div class="frow"><label>Tagline (hero)</label><input type="text" id="shopTagline" placeholder="Ex: Services Numériques Premium"></div>
+              <div class="frow"><label>Téléphone principal</label><input type="text" id="shopPhone1" placeholder="Ex: +226 06 11 47 97"></div>
+              <div class="frow"><label>WhatsApp (commandes)</label><input type="text" id="shopWhatsapp" placeholder="Ex: +226 52 83 91 61"></div>
+              <div class="frow"><label>Email</label><input type="email" id="shopEmail" placeholder="Ex: contact@Alifam Hub.com"></div>
+              <div class="frow"><label>Adresse / Ville</label><input type="text" id="shopAddr" placeholder="Ex: Koudougou, BF"></div>
+              <div class="frow"><label>Nombre de clients (ex: 1000+)</label><input type="text" id="shopClients" placeholder="Ex: 1500+"></div>
+              <div class="frow"><label>Facebook</label><input type="text" id="shopFb" placeholder="https://facebook.com/…"></div>
+              <div class="frow"><label>Instagram</label><input type="text" id="shopIg" placeholder="https://instagram.com/…"></div>
+              <div class="frow"><label>Telegram</label><input type="text" id="shopTg" placeholder="https://t.me/…"></div>
+            </div>
+            <div class="frow" style="margin-top:13px"><label>Description hero (sous le titre)</label><textarea id="shopDesc" placeholder="VPN Orange & Moov, Pass TikTok…" style="min-height:65px"></textarea></div>
+            <div class="frow" style="margin-top:8px"><label>Description footer</label><textarea id="shopFooterDesc" placeholder="Votre partenaire de confiance…" style="min-height:55px"></textarea></div>
+            <div class="frow" style="margin-top:8px"><label>Texte copyright</label><input type="text" id="shopCopy" placeholder="© 2025 Alifam Hub. Tous droits réservés."></div>
+            <button class="btn bto" id="saveShopInfo" style="margin-top:16px;width:fit-content"><i class="fas fa-save"></i> Enregistrer les infos</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMINISTRATEURS -->
+      <div class="panel" id="panel-admins">
+        <div class="seccard">
+          <div class="sechdr">
+            <h3><i class="fas fa-user-shield" style="color:var(--a);margin-right:7px"></i>Gestion des Administrateurs</h3>
+            <button class="btn bto" id="addAdminBtn" onclick="openAdminM()"><i class="fas fa-plus"></i> Ajouter un admin</button>
+          </div>
+          <div class="secbody">
+            <p style="font-size:.82rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Les administrateurs ajoutés ici ont accès complet au panel. Envoyez-leur le lien du panel — ils se connectent avec leur compte Firebase.</p>
+            <div class="admin-list" id="adminList">
+              <div class="emptystate"><div class="spin"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATÉGORIES -->
+      <div class="panel" id="panel-categories">
+        <div class="seccard">
+          <div class="sechdr">
+            <h3><i class="fas fa-th-large" style="color:var(--a);margin-right:7px"></i>Gestion des Catégories</h3>
+            <button class="btn bto" onclick="openCatM()"><i class="fas fa-plus"></i> Nouvelle catégorie</button>
+          </div>
+          <div class="secbody">
+            <p style="font-size:.82rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Les catégories s'affichent en temps réel sur la boutique sous forme de cards visuelles. Chaque produit peut être assigné à une catégorie.</p>
+            <div id="catAdminGrid" class="cat-admin-grid">
+              <div class="emptystate"><div class="spin"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modov" id="prodmod">
+  <div class="modbox">
+    <div class="modhdr"><h3 id="pmtitle">Nouveau produit</h3><button class="modcl" onclick="closePM()"><i class="fas fa-times"></i></button></div>
+    <div class="modbody">
+      <input type="hidden" id="pid">
+      <div class="frow2">
+        <div class="frow"><label>Nom du produit *</label><input type="text" id="pname" placeholder="Ex: VPN Orange"></div>
+        <div class="frow"><label>Catégorie *</label>
+          <select id="pcat">
+            <option value="default">Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow"><label>Description *</label><textarea id="pdesc" placeholder="Décrivez le service…"></textarea></div>
+      <div class="frow2">
+        <div class="frow"><label>Prix (FCFA) *</label><input type="number" id="pprice" placeholder="500" min="0"></div>
+        <div class="frow"><label>Unité / période</label><input type="text" id="punit" placeholder="Ex: / sem."></div>
+      </div>
+      <div class="frow2">
+        <div class="frow"><label>Note</label><input type="text" id="pnote" placeholder="Ex: Réseau Moov uniquement"></div>
+        <div class="frow"><label>Ordre</label><input type="number" id="porder" value="99" min="1" max="99"></div>
+      </div>
+      <div class="frow"><label>Tags (séparés par virgule)</label><input type="text" id="ptags" placeholder="1 sem · 500 F, 1 mois · 1 500 F"></div>
+      <div class="frow2">
+        <div class="frow"><label>Badge</label>
+          <select id="pbadge"><option value="">Aucun</option><option value="Populaire">Populaire</option><option value="Nouveau">Nouveau</option><option value="Exclusif">Exclusif</option><option value="Gain Garanti">Gain Garanti</option></select>
+        </div>
+        <div class="frow"><label>Texte promo</label><input type="text" id="ppromo" placeholder="Ex: -20% ce weekend !"></div>
+      </div>
+      <div class="frow"><label>Date limite de la promo</label><input type="datetime-local" id="pdeadline"></div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
+        <label style="display:block;margin-bottom:10px">Visuel du produit</label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="imgFile" accept="image/*">
+          <i class="fas fa-cloud-upload-alt" style="font-size:1.6rem;color:var(--text3);margin-bottom:6px"></i>
+          <div style="font-size:.82rem;font-weight:600;color:var(--text2)">Cliquez pour uploader une image</div>
+          <div style="font-size:.74rem;color:var(--text3);margin-top:3px">JPG, PNG, WEBP — max 5 Mo</div>
+        </div>
+        <div class="upload-prog" id="uprog"><div class="upload-prog-bar" id="uprogbar"></div></div>
+        <img class="upload-preview" id="imgPreview" alt="Aperçu">
+        <button id="clearImg" style="display:none;margin-top:6px;font-size:.77rem;color:var(--red);font-weight:600;background:none;border:none;cursor:pointer"><i class="fas fa-trash"></i> Supprimer l'image</button>
+        <!-- GALERIE -->
+        <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
+          <label style="display:block;margin-bottom:4px;font-size:.77rem;font-weight:700">Images de galerie <span style="font-weight:400;color:var(--text3)">(preuves / captures du produit)</span></label>
+          <p style="font-size:.74rem;color:var(--text3);margin-bottom:10px;line-height:1.5">Uploadez plusieurs images — elles s'afficheront en galerie défilable dans le détail du produit.</p>
+          <div class="gallery-grid" id="galleryGrid">
+            <!-- items injectés dynamiquement + tile d'ajout -->
+          </div>
+        </div>
+        <div class="upload-or">— OU utiliser une icône —</div>
+        <label style="display:block;margin-bottom:7px;font-size:.77rem">Sélectionner une icône</label>
+        <div class="icon-picker" id="iconPicker"></div>
+        <div class="icon-preview-row" id="iconPrev" style="display:none">
+          <div class="icon-preview-dot" id="iconPrevDot" style="background:linear-gradient(135deg,#ff6b35,#e05020)"><i id="iconPrevI"></i></div>
+          <div><div style="font-size:.82rem;font-weight:700" id="iconPrevName">Aucune icône</div><div style="font-size:.74rem;color:var(--text3)">Icône sélectionnée</div></div>
+          <button id="clearIcon" style="margin-left:auto;font-size:.77rem;color:var(--text3);background:none;border:none;cursor:pointer"><i class="fas fa-times"></i></button>
+        </div>
+        <input type="hidden" id="selIcon">
+        <input type="hidden" id="selImgUrl">
+      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <label class="fcheck"><input type="checkbox" id="pwide"> Carte large (2 colonnes)</label>
+        <label class="fcheck"><input type="checkbox" id="pactive" checked> Produit actif</label>
+      </div>
+    </div>
+    <div class="modfoot">
+      <button class="btn btg" onclick="closePM()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn bto" id="savepbtn" onclick="saveProduct()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modov" id="adminmod">
+  <div class="modbox" style="max-width:420px">
+    <div class="modhdr"><h3>Ajouter un administrateur</h3><button class="modcl" onclick="closeAdminM()"><i class="fas fa-times"></i></button></div>
+    <div class="modbody">
+      <div class="frow">
+        <label>Email du compte Firebase *</label>
+        <input type="email" id="newAdminEmail" placeholder="Ex: collaborateur@gmail.com" autocomplete="off">
+        <div style="font-size:.74rem;color:var(--text3);margin-top:5px;line-height:1.5"><i class="fas fa-info-circle"></i> La personne doit d'abord créer un compte sur la boutique avec cet email, puis vous pouvez l'ajouter ici.</div>
+      </div>
+      <div class="frow">
+        <label>Nom / Pseudo</label>
+        <input type="text" id="newAdminName" placeholder="Ex: Collaborateur 1">
+      </div>
+    </div>
+    <div class="modfoot">
+      <button class="btn btg" onclick="closeAdminM()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn bto" id="saveAdminBtn" onclick="saveAdmin()"><i class="fas fa-user-plus"></i> Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div class="modov" id="catmod">
+  <div class="modbox" style="max-width:440px">
+    <div class="modhdr"><h3 id="cattitle">Nouvelle catégorie</h3><button class="modcl" onclick="closeCatM()"><i class="fas fa-times"></i></button></div>
+    <div class="modbody">
+      <input type="hidden" id="catEditId">
+      <div class="frow"><label>Nom de la catégorie *</label><input type="text" id="catName" placeholder="Ex: VPN, Netflix, Pass TikTok…"></div>
+      <div class="frow"><label>Ordre d'affichage</label><input type="number" id="catOrder" value="99" min="1" max="99" placeholder="99"></div>
+      <div class="frow">
+        <label>Icône FontAwesome *</label>
+        <div class="icon-picker" id="catIconPicker"></div>
+        <div class="icon-preview-row" id="catIconPrev" style="display:none">
+          <div class="icon-preview-dot" id="catIconDot" style="background:linear-gradient(135deg,#ff6b35,#e05020)"><i id="catIconI"></i></div>
+          <div><div style="font-size:.82rem;font-weight:700" id="catIconName">Aucune icône</div><div style="font-size:.74rem;color:var(--text3)">Icône sélectionnée</div></div>
+          <button onclick="clearCatIcon()" style="margin-left:auto;font-size:.77rem;color:var(--text3);background:none;border:none;cursor:pointer"><i class="fas fa-times"></i></button>
+        </div>
+        <input type="hidden" id="catIcon">
+      </div>
+      <div class="frow">
+        <label>Couleur / Dégradé</label>
+        <div class="grad-presets" id="gradPresets"></div>
+        <input type="hidden" id="catGrad">
+      </div>
+    </div>
+    <div class="modfoot">
+      <button class="btn btg" onclick="closeCatM()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn bto" id="savecatbtn" onclick="saveCat()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROMO MODAL -->
+<div class="modov" id="promomod">
+  <div class="modbox" style="max-width:420px">
+    <div class="modhdr"><h3 id="promtitle">Nouveau code promo</h3><button class="modcl" onclick="closePromoM()"><i class="fas fa-times"></i></button></div>
+    <div class="modbody">
+      <input type="hidden" id="promid">
+      <div class="frow"><label>Code promo *</label><input type="text" id="promcode" placeholder="Ex: PROMO50" style="text-transform:uppercase"></div>
+      <div class="frow"><label>Réduction (%) *</label><input type="number" id="promdiscount" placeholder="Ex: 20" min="1" max="100"></div>
+      <label class="fcheck"><input type="checkbox" id="promactive" checked> Code actif</label>
+    </div>
+    <div class="modfoot">
+      <button class="btn btg" onclick="closePromoM()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn bto" id="saveprom" onclick="savePromo()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div class="modov" id="usermod">
+  <div class="modbox" style="max-width:480px">
+    <div class="modhdr"><h3>Détail utilisateur</h3><button class="modcl" onclick="closeUserMod()"><i class="fas fa-times"></i></button></div>
+    <div class="modbody" id="usermodBody"></div>
+    <div class="modfoot">
+      <button class="btn btg" onclick="closeUserMod()"><i class="fas fa-times"></i> Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confov" id="confov">
+  <div class="confbox">
+    <div style="font-size:2rem;color:var(--red)"><i class="fas fa-exclamation-triangle"></i></div>
+    <h3 id="confTitle">Confirmer l'action ?</h3>
+    <p id="confMsg">Cette action est irréversible.</p>
+    <div class="confbtns">
+      <button class="btn btg" onclick="closeConf()">Annuler</button>
+      <button class="btn btr" id="confyes"><i class="fas fa-check"></i> Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
