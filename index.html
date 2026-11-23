@@ -2390,7 +2390,8 @@ const CLOUDINARY_CLOUD = 'dcv1j6htu';
 const CLOUDINARY_PRESET = 'ml_default';
 
 const app = initializeApp(FB);
-const set = denyWrite, push = denyWrite, remove = denyWrite, update = denyWrite;
+const set = (...args) => Promise.reject(new Error("Mode aperçu : écritures désactivées."));
+const push = set, remove = set, update = set;
 const db = getDatabase(app);
 const $ = id => document.getElementById(id);
 
