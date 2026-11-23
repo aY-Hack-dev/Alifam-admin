@@ -2371,8 +2371,9 @@ const FB = {
   "appId": "1:473542687810:web:96c40dcaeb11ac473201db"
 };
 
-const CLOUDINARY_CLOUD = 'dcv1j6htu';
-const CLOUDINARY_PRESET = 'ml_default';
+const SUPABASE_URL = 'https://lplbalujcbbnwtrokjho.supabase.co';
+const SUPABASE_COVERS_BUCKET = 'product-covers';
+const SUPABASE_GALLERY_BUCKET = 'product-gallery';
 
 const app = initializeApp(FB);
 const set = (...args) => Promise.reject(new Error("Mode aperçu : écritures désactivées."));
@@ -2418,7 +2419,7 @@ function toast(msg, type = 's') {
 
 /* Mode aperçu sans connexion : aucune écriture administrateur n'est permise.
    Les règles Firebase doivent également interdire les écritures anonymes. */
-const READ_ONLY_MESSAGE = "Consultation sans connexion : les modifications sont bloquées pour protéger Firebase. Les images existantes sont actuellement hébergées sur Cloudinary.";
+const READ_ONLY_MESSAGE = "Consultation sans connexion : les modifications sont bloquées pour protéger Firebase. Les futures images utiliseront Supabase une fois l’accès d’écriture privé activé.";
 const denyWrite = () => Promise.reject(new Error(READ_ONLY_MESSAGE));
 if ($('adminPage')) $('adminPage').classList.add('on');
 if ($('sbemail')) $('sbemail').textContent = 'Aperçu sans connexion';
@@ -3202,7 +3203,7 @@ window.saveAdmin = async function() {
   if ($('saveAdminBtn')) $('saveAdminBtn').innerHTML = '<i class="fas fa-user-plus"></i> Ajouter';
 };
 
-/* ══ GALERIE IMAGES — UPLOAD CLOUDINARY ══ */
+/* ══ GALERIE IMAGES — SUPABASE (UPLOAD PROTÉGÉ À ACTIVER) ══ */
 let galleryUrls = [];
 
 function renderGalleryGrid() {
@@ -3248,52 +3249,9 @@ async function handleGalleryFiles(files) {
 }
 
 async function uploadGalleryFile(file) {
-  const grid = $('galleryGrid');
-  if (!grid) return;
-  const item = document.createElement('div');
-  item.className = 'gallery-item';
-  const thumb = document.createElement('img');
-  thumb.src = URL.createObjectURL(file);
-  thumb.alt = '';
-  const prog = document.createElement('div');
-  prog.className = 'gallery-item-prog';
-  const bar = document.createElement('div');
-  bar.className = 'gallery-item-prog-bar';
-  const fill = document.createElement('div');
-  fill.className = 'gallery-item-prog-fill';
-  fill.style.width = '0%';
-  const lbl = document.createElement('span');
-  lbl.textContent = '0%';
-  bar.appendChild(fill);
-  prog.append(bar, lbl);
-  item.append(thumb, prog);
-  const tile = grid.querySelector('.gallery-add-tile');
-  grid.insertBefore(item, tile);
-  try {
-    fill.style.width = '20%';
-    lbl.textContent = '20%';
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    fill.style.width = '50%';
-    lbl.textContent = '50%';
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd });
-    fill.style.width = '90%';
-    lbl.textContent = '90%';
-    const data = await res.json();
-    if (data.secure_url) {
-      fill.style.width = '100%';
-      lbl.textContent = '✓';
-      setTimeout(() => {
-        prog.remove();
-        galleryUrls.push(data.secure_url);
-        renderGalleryGrid();
-      }, 400);
-    } else throw new Error('Upload échoué');
-  } catch (e) {
-    item.remove();
-    toast('Erreur upload galerie.', 'e');
-  }
+  // Admin sans connexion: ne jamais donner un jeton de téléversement anonyme.
+  // La route API /api/admin/uploads/sign reste protégée côté serveur.
+  toast('Envoi désactivé : configurez un accès administrateur privé côté serveur.', 'w');
 }
 
 function getGalleryUrls() { return [...galleryUrls]; }
