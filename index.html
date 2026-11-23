@@ -2191,72 +2191,17 @@ textarea {
 <!-- PRODUCT MODAL -->
 <div class="modov" id="prodmod">
   <div class="modbox">
-    <div class="modhdr"><h3 id="pmtitle">Nouveau produit</h3><button class="modcl" onclick="closePM()"><i class="fas fa-times"></i></button></div>
+    <div class="modhdr"><h3>Nouveau produit</h3><button class="modcl" onclick="closePM()" aria-label="Fermer"><i class="fas fa-times"></i></button></div>
     <div class="modbody">
-      <input type="hidden" id="pid">
-      <div class="frow2">
-        <div class="frow"><label>Nom du produit *</label><input type="text" id="pname" placeholder="Ex: VPN Orange"></div>
-        <div class="frow"><label>Catégorie *</label>
-          <select id="pcat">
-            <option value="default">Autre</option>
-          </select>
-        </div>
-      </div>
-      <div class="frow"><label>Description *</label><textarea id="pdesc" placeholder="Décrivez le service…"></textarea></div>
-      <div class="frow2">
-        <div class="frow"><label>Prix (FCFA) *</label><input type="number" id="pprice" placeholder="500" min="0"></div>
-        <div class="frow"><label>Unité / période</label><input type="text" id="punit" placeholder="Ex: / sem."></div>
-      </div>
-      <div class="frow2">
-        <div class="frow"><label>Note</label><input type="text" id="pnote" placeholder="Ex: Réseau Moov uniquement"></div>
-        <div class="frow"><label>Ordre</label><input type="number" id="porder" value="99" min="1" max="99"></div>
-      </div>
-      <div class="frow"><label>Tags (séparés par virgule)</label><input type="text" id="ptags" placeholder="1 sem · 500 F, 1 mois · 1 500 F"></div>
-      <div class="frow2">
-        <div class="frow"><label>Badge</label>
-          <select id="pbadge"><option value="">Aucun</option><option value="Populaire">Populaire</option><option value="Nouveau">Nouveau</option><option value="Exclusif">Exclusif</option><option value="Gain Garanti">Gain Garanti</option></select>
-        </div>
-        <div class="frow"><label>Texte promo</label><input type="text" id="ppromo" placeholder="Ex: -20% ce weekend !"></div>
-      </div>
-      <div class="frow"><label>Date limite de la promo</label><input type="datetime-local" id="pdeadline"></div>
-      <div style="background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)">
-        <label style="display:block;margin-bottom:10px">Visuel du produit</label>
-        <div class="upload-area" id="uploadArea">
-          <input type="file" id="imgFile" accept="image/*">
-          <i class="fas fa-cloud-upload-alt" style="font-size:1.6rem;color:var(--text3);margin-bottom:6px"></i>
-          <div style="font-size:.82rem;font-weight:600;color:var(--text2)">Cliquez pour uploader une image</div>
-          <div style="font-size:.74rem;color:var(--text3);margin-top:3px">JPG, PNG, WEBP — max 5 Mo</div>
-        </div>
-        <div class="upload-prog" id="uprog"><div class="upload-prog-bar" id="uprogbar"></div></div>
-        <img class="upload-preview" id="imgPreview" alt="Aperçu">
-        <button id="clearImg" style="display:none;margin-top:6px;font-size:.77rem;color:var(--red);font-weight:600;background:none;border:none;cursor:pointer"><i class="fas fa-trash"></i> Supprimer l'image</button>
-        <!-- GALERIE -->
-        <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
-          <label style="display:block;margin-bottom:4px;font-size:.77rem;font-weight:700">Images de galerie <span style="font-weight:400;color:var(--text3)">(preuves / captures du produit)</span></label>
-          <p style="font-size:.74rem;color:var(--text3);margin-bottom:10px;line-height:1.5">Uploadez plusieurs images — elles s'afficheront en galerie défilable dans le détail du produit.</p>
-          <div class="gallery-grid" id="galleryGrid">
-            <!-- items injectés dynamiquement + tile d'ajout -->
-          </div>
-        </div>
-        <div class="upload-or">— OU utiliser une icône —</div>
-        <label style="display:block;margin-bottom:7px;font-size:.77rem">Sélectionner une icône</label>
-        <div class="icon-picker" id="iconPicker"></div>
-        <div class="icon-preview-row" id="iconPrev" style="display:none">
-          <div class="icon-preview-dot" id="iconPrevDot" style="background:linear-gradient(135deg,#ff6b35,#e05020)"><i id="iconPrevI"></i></div>
-          <div><div style="font-size:.82rem;font-weight:700" id="iconPrevName">Aucune icône</div><div style="font-size:.74rem;color:var(--text3)">Icône sélectionnée</div></div>
-          <button id="clearIcon" style="margin-left:auto;font-size:.77rem;color:var(--text3);background:none;border:none;cursor:pointer"><i class="fas fa-times"></i></button>
-        </div>
-        <input type="hidden" id="selIcon">
-        <input type="hidden" id="selImgUrl">
-      </div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap">
-        <label class="fcheck"><input type="checkbox" id="pwide"> Carte large (2 colonnes)</label>
-        <label class="fcheck"><input type="checkbox" id="pactive" checked> Produit actif</label>
-      </div>
+      <div class="frow"><label for="pname">Nom du produit *</label><input id="pname" maxlength="120" required></div>
+      <div class="frow"><label for="pcat">Catégorie</label><select id="pcat"><option value="default">Autre</option></select></div>
+      <div class="frow"><label for="pdesc">Description *</label><textarea id="pdesc" maxlength="3000" required></textarea></div>
+      <div class="frow"><label for="pprice">Prix en FCFA *</label><input type="number" id="pprice" min="1" step="1" required></div>
+      <div class="frow"><label for="imgFile">Image de couverture (JPG, PNG ou WebP, 5 Mo maximum)</label><input type="file" id="imgFile" accept="image/jpeg,image/png,image/webp"></div>
     </div>
     <div class="modfoot">
-      <button class="btn btg" onclick="closePM()"><i class="fas fa-times"></i> Annuler</button>
-      <button class="btn bto" id="savepbtn" onclick="saveProduct()"><i class="fas fa-save"></i> Enregistrer</button>
+      <button class="btn btg" onclick="closePM()">Annuler</button>
+      <button class="btn bto" id="savepbtn" onclick="saveProduct()">Publier dans la boutique</button>
     </div>
   </div>
 </div>
@@ -2419,20 +2364,15 @@ function toast(msg, type = 's') {
 
 /* Mode aperçu sans connexion : aucune écriture administrateur n'est permise.
    Les règles Firebase doivent également interdire les écritures anonymes. */
-const READ_ONLY_MESSAGE = "Consultation sans connexion : les modifications sont bloquées pour protéger Firebase. Les futures images utiliseront Supabase une fois l’accès d’écriture privé activé.";
+const READ_ONLY_MESSAGE = "Cette action est réservée à la gestion privée. La création de produits est ouverte sans connexion.";
 const denyWrite = () => Promise.reject(new Error(READ_ONLY_MESSAGE));
 if ($('adminPage')) $('adminPage').classList.add('on');
-if ($('sbemail')) $('sbemail').textContent = 'Aperçu sans connexion';
+if ($('sbemail')) $('sbemail').textContent = 'Catalogue public';
 if ($('sblogout')) $('sblogout').style.display = 'none';
 if ($('sbAdminLink')) $('sbAdminLink').style.display = 'none';
-const notice = document.createElement('div');
-notice.setAttribute('role', 'status');
-notice.style.cssText = 'position:sticky;top:0;z-index:9999;background:#fff0cb;color:#5b3a00;padding:12px 18px;text-align:center;font:600 13px system-ui';
-notice.textContent = READ_ONLY_MESSAGE;
-document.body.prepend(notice);
 document.addEventListener('click', event => {
   const control = event.target.closest('button,[onclick],input[type=submit]');
-  if (!control || control.closest('#sidebar') && control.dataset.p) return;
+  if (!control || control.closest('#sidebar') && control.dataset.p || control.getAttribute('onclick')?.includes('openPM()') || control.id === 'savepbtn') return;
   if (control.closest('#adminPage') && /^(enregistrer|supprimer|ajouter|modifier|publier|valider|bannir|débloquer|confirmer|envoyer)/i.test(control.textContent.trim())) {
     event.preventDefault(); event.stopImmediatePropagation(); toast(READ_ONLY_MESSAGE,'w');
   }
@@ -3292,140 +3232,64 @@ if ($('clearIcon')) {
   });
 }
 
-/* ══ IMAGE UPLOAD TO CLOUDINARY ══ */
-if ($('imgFile')) {
-  $('imgFile').addEventListener('change', async () => {
-    const file = $('imgFile').files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast('Image trop lourde (max 5 Mo).', 'e'); return; }
-    if ($('uprog')) $('uprog').style.display = 'block';
-    if ($('uprogbar')) $('uprogbar').style.width = '20%';
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    try {
-      if ($('uprogbar')) $('uprogbar').style.width = '50%';
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd });
-      if ($('uprogbar')) $('uprogbar').style.width = '90%';
-      const data = await res.json();
-      if (data.secure_url) {
-        if ($('selImgUrl')) $('selImgUrl').value = data.secure_url;
-        const prev = $('imgPreview');
-        if (prev) {
-          prev.src = data.secure_url;
-          prev.style.display = 'block';
-        }
-        if ($('clearImg')) $('clearImg').style.display = 'inline-flex';
-        if ($('uprogbar')) $('uprogbar').style.width = '100%';
-        toast('Image uploadée avec succès !');
-        setTimeout(() => { if ($('uprog')) $('uprog').style.display = 'none'; }, 600);
-      } else throw new Error('Upload échoué');
-    } catch (e) { toast('Erreur upload image.', 'e'); if ($('uprog')) $('uprog').style.display = 'none'; }
-  });
-}
 
-if ($('clearImg')) {
-  $('clearImg').addEventListener('click', () => {
-    if ($('selImgUrl')) $('selImgUrl').value = '';
-    if ($('imgFile')) $('imgFile').value = '';
-    if ($('imgPreview')) $('imgPreview').style.display = 'none';
-    if ($('clearImg')) $('clearImg').style.display = 'none';
-  });
-}
-
-/* ══ PRODUCT MODAL ══ */
-let editId = null;
+const CATALOG_API = 'https://alifam-api.onrender.com/api/catalog/products';
 
 window.openPM = function(id = null) {
-  editId = id;
-  buildIconPicker();
+  if (id) { toast(READ_ONLY_MESSAGE, 'w'); return; }
   refreshPcatSelect();
-  if ($('pmtitle')) $('pmtitle').textContent = id ? 'Modifier le produit' : 'Nouveau produit';
-  ['pname', 'punit', 'pnote', 'ptags', 'ppromo'].forEach(f => { if ($(f)) $(f).value = ''; });
-  if ($('pdesc')) $('pdesc').value = '';
-  if ($('pprice')) $('pprice').value = '';
-  if ($('porder')) $('porder').value = '99';
-  if ($('pbadge')) $('pbadge').value = '';
-  if ($('pwide')) $('pwide').checked = false;
-  if ($('pactive')) $('pactive').checked = true;
-  if ($('pdeadline')) $('pdeadline').value = '';
-  if ($('selIcon')) $('selIcon').value = '';
-  if ($('selImgUrl')) $('selImgUrl').value = '';
-  if ($('imgPreview')) $('imgPreview').style.display = 'none';
-  if ($('clearImg')) $('clearImg').style.display = 'none';
-  if ($('iconPrev')) $('iconPrev').style.display = 'none';
-  if ($('iconPicker')) $('iconPicker').querySelectorAll('.icon-pick').forEach(x => x.classList.remove('selected'));
-  galleryUrls = [];
-  renderGalleryGrid();
-  if (id && allProducts[id]) {
-    const p = allProducts[id];
-    if ($('pname')) $('pname').value = p.name || '';
-    if ($('pdesc')) $('pdesc').value = p.description || '';
-    if ($('pprice')) $('pprice').value = p.price || '';
-    if ($('punit')) $('punit').value = p.unit || '';
-    if ($('pnote')) $('pnote').value = p.note || '';
-    if ($('ptags')) $('ptags').value = (p.tags || []).join(', ');
-    if ($('pcat')) $('pcat').value = p.category || 'default';
-    if ($('pbadge')) $('pbadge').value = p.badge || '';
-    if ($('ppromo')) $('ppromo').value = p.promo || '';
-    if ($('porder')) $('porder').value = p.order || 99;
-    if ($('pwide')) $('pwide').checked = p.wide || false;
-    if ($('pactive')) $('pactive').checked = p.active !== false;
-    if (p.promoDeadline && $('pdeadline')) $('pdeadline').value = p.promoDeadline;
-    if (p.image) {
-      if ($('selImgUrl')) $('selImgUrl').value = p.image;
-      if ($('imgPreview')) {
-        $('imgPreview').src = p.image;
-        $('imgPreview').style.display = 'block';
-      }
-      if ($('clearImg')) $('clearImg').style.display = 'inline-flex';
-    }
-    if (p.icon) {
-      if ($('selIcon')) $('selIcon').value = p.icon;
-      if ($('iconPrev')) $('iconPrev').style.display = 'flex';
-      if ($('iconPrevI')) $('iconPrevI').className = p.icon;
-      if ($('iconPicker')) $('iconPicker').querySelectorAll('.icon-pick').forEach(x => { if (x.querySelector('i').className === p.icon) x.classList.add('selected'); });
-    }
-    if (p.gallery && Array.isArray(p.gallery)) {
-      p.gallery.forEach(url => { if (url && !galleryUrls.includes(url)) galleryUrls.push(url); });
-      renderGalleryGrid();
-    }
-  }
-  if ($('prodmod')) $('prodmod').classList.add('on');
+  $('pcat').value = 'default';
+  for (const field of ['pname', 'pdesc', 'pprice', 'imgFile']) $(field).value = '';
+  $('prodmod').classList.add('on');
+  $('pname').focus();
 };
 
-window.closePM = function() { if ($('prodmod')) $('prodmod').classList.remove('on'); editId = null; };
-if ($('prodmod')) $('prodmod').addEventListener('click', e => { if (e.target === $('prodmod')) closePM(); });
+window.closePM = function() {
+  if (!$('savepbtn').disabled) $('prodmod').classList.remove('on');
+};
+$('prodmod').addEventListener('click', event => {
+  if (event.target === $('prodmod')) closePM();
+});
+
+function readCover(file) {
+  if (!file) return Promise.resolve('');
+  if (file.size > 5 * 1024 * 1024) return Promise.reject(new Error('Image trop lourde (5 Mo maximum).'));
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = () => reject(new Error('Impossible de lire l’image.'));
+    reader.readAsDataURL(file);
+  });
+}
 
 window.saveProduct = async function() {
-  const name = $('pname') ? $('pname').value.trim() : '';
-  const price = $('pprice') ? $('pprice').value : '';
-  const desc = $('pdesc') ? $('pdesc').value.trim() : '';
-  if (!name || !price || !desc) { toast('Remplissez les champs obligatoires (*).', 'w'); return; }
-  const gallery = getGalleryUrls();
-  const data = {
-    name, description: desc, price: parseInt(price, 10),
-    unit: $('punit') ? $('punit').value.trim() : '',
-    note: $('pnote') ? $('pnote').value.trim() : '',
-    category: $('pcat') ? $('pcat').value : 'default',
-    badge: $('pbadge') ? $('pbadge').value : '',
-    promo: $('ppromo') ? $('ppromo').value.trim() : '',
-    order: parseInt(($('porder') ? $('porder').value : '99'), 10) || 99,
-    wide: $('pwide') ? $('pwide').checked : false,
-    active: $('pactive') ? $('pactive').checked : true,
-    tags: ($('ptags') && $('ptags').value) ? $('ptags').value.split(',').map(t => t.trim()).filter(Boolean) : [],
-    icon: ($('selIcon') ? $('selIcon').value : '') || '',
-    image: ($('selImgUrl') ? $('selImgUrl').value : '') || '',
-    gallery: gallery.length > 0 ? gallery : null,
-    promoDeadline: ($('pdeadline') ? $('pdeadline').value : null) || null
-  };
-  if ($('savepbtn')) $('savepbtn').innerHTML = '<div class="spin"></div>';
+  const button = $('savepbtn');
+  if (button.disabled) return;
+  const name = $('pname').value.trim();
+  const description = $('pdesc').value.trim();
+  const price = Number($('pprice').value);
+  if (!name || !description || !Number.isSafeInteger(price) || price < 1) {
+    toast('Renseignez le nom, la description et un prix entier positif.', 'w');
+    return;
+  }
+  const category = $('pcat').value || 'default';
+  button.disabled = true;
   try {
-    if (editId) { await update(ref(db, 'products/' + editId), data); toast('Produit modifié !'); }
-    else { await push(ref(db, 'products'), data); toast('Produit ajouté ! 🎉'); }
-    closePM();
-  } catch (e) { toast('Erreur : ' + e.message, 'e'); }
-  if ($('savepbtn')) $('savepbtn').innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+    const image = await readCover($('imgFile').files[0]);
+    const response = await fetch(CATALOG_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description, price, category, image })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.message || 'Publication indisponible.');
+    $('prodmod').classList.remove('on');
+    toast('Produit publié dans la boutique.');
+  } catch (error) {
+    toast(error.message || 'Publication indisponible.', 'e');
+  } finally {
+    button.disabled = false;
+  }
 };
 
 /* ══ PROMO MODAL ══ */
