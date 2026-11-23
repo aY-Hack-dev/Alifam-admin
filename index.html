@@ -1998,23 +1998,8 @@ textarea {
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage" class="on">
-  <div class="lbox">
-    <div class="llogo"><div class="ldot"><i class="fas fa-shield-alt"></i></div>ALIFAM-IMPACT ADMIN</div>
-    <div class="ltitle">Bienvenue, cher Administrateur.</div>
-    <div class="lsub">Veuillez entrer vos informations pour continuer</div>
-    <div class="lform">
-      <input class="linput" type="email" id="adEmail" placeholder="Email administrateur" autocomplete="email">
-      <input class="linput" type="password" id="adPass" placeholder="Mot de passe" autocomplete="current-password">
-      <div class="lerr" id="adErr"></div>
-      <button class="lbtn" id="adBtn"><i class="fas fa-lock"></i> Se connecter</button>
-    </div>
-  </div>
-</div>
-
 <!-- ADMIN -->
-<div id="adminPage">
+<div id="adminPage" class="on">
   <div class="mobov" id="mobov"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sbrand"><div class="sbd"><i class="fas fa-shield-alt"></i></div><div><div class="sbt">ALIFAM-IMPACT ADMIN</div><div class="sbs">Tableau de bord</div></div></div>
@@ -2395,7 +2380,7 @@ const push = set, remove = set, update = set;
 const db = getDatabase(app);
 const $ = id => document.getElementById(id);
 
-const SUPER_ADMIN = 'aloysilboudoe@gmail.com';
+// No privileged admin identity is assigned to anonymous visitors.
 let currentAdminEmail = '';
 let isSuperAdmin = false;
 
@@ -2433,9 +2418,8 @@ function toast(msg, type = 's') {
 
 /* Mode aperçu sans connexion : aucune écriture administrateur n'est permise.
    Les règles Firebase doivent également interdire les écritures anonymes. */
-const READ_ONLY_MESSAGE = "Mode aperçu : modifications désactivées. Un contrôle serveur est nécessaire pour gérer la boutique.";
+const READ_ONLY_MESSAGE = "Consultation sans connexion : les modifications sont bloquées pour protéger Firebase. Les images existantes sont actuellement hébergées sur Cloudinary.";
 const denyWrite = () => Promise.reject(new Error(READ_ONLY_MESSAGE));
-if ($('loginPage')) $('loginPage').classList.remove('on');
 if ($('adminPage')) $('adminPage').classList.add('on');
 if ($('sbemail')) $('sbemail').textContent = 'Aperçu sans connexion';
 if ($('sblogout')) $('sblogout').style.display = 'none';
