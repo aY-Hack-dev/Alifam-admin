@@ -2373,24 +2373,24 @@ textarea {
 <div class="toasts" id="toasts"></div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-import { getDatabase, ref, onValue, set, push, remove, update, get } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const FB = {
-  apiKey: "AIzaSyDdHVlNZNXmBPo26EScIKtVD0vDvLwvTiA",
-  authDomain: "alifam-hub-1b32a.firebaseapp.com",
-  databaseURL: "https://alifam-hub-1b32a-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "alifam-hub-1b32a",
-  storageBucket: "alifam-hub-1b32a.firebasestorage.app",
-  messagingSenderId: "992942156489",
-  appId: "1:992942156489:web:a5e24c7d2fa57b13933b18"
+  "apiKey": "AIzaSyBAvuk-ezjhUr0BaFmzoyMBLXTvJm8QcFY",
+  "authDomain": "alifam-impact.firebaseapp.com",
+  "databaseURL": "https://alifam-impact-default-rtdb.europe-west1.firebasedatabase.app",
+  "projectId": "alifam-impact",
+  "storageBucket": "alifam-impact.firebasestorage.app",
+  "messagingSenderId": "473542687810",
+  "appId": "1:473542687810:web:96c40dcaeb11ac473201db"
 };
 
 const CLOUDINARY_CLOUD = 'dcv1j6htu';
 const CLOUDINARY_PRESET = 'ml_default';
 
 const app = initializeApp(FB);
-const auth = getAuth(app);
+const set = denyWrite, push = denyWrite, remove = denyWrite, update = denyWrite;
 const db = getDatabase(app);
 const $ = id => document.getElementById(id);
 
@@ -2430,85 +2430,27 @@ function toast(msg, type = 's') {
   }, 3000);
 }
 
-/* ══ AUTHENTIFICATION FIREBASE ══ */
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const isSup = user.email === SUPER_ADMIN;
-    let isAdmin = isSup;
-    
-    if (!isSup) {
-      const snap = await get(ref(db, 'settings/admins'));
-      const admins = snap.val() || {};
-      isAdmin = Object.values(admins).some(a => a.email === user.email);
-    }
-    
-    if (!isAdmin) {
-      await signOut(auth);
-      if ($('adErr')) $('adErr').textContent = 'Accès refusé. Vous n\'êtes pas administrateur.';
-      return;
-    }
-    
-    currentAdminEmail = user.email;
-    isSuperAdmin = isSup;
-    
-    if ($('loginPage')) $('loginPage').classList.remove('on');
-    if ($('adminPage')) $('adminPage').classList.add('on');
-    if ($('sbav')) $('sbav').textContent = user.email.charAt(0).toUpperCase();
-    if ($('sbemail')) $('sbemail').textContent = user.email;
-    if (isSup && $('sbAdminLink')) $('sbAdminLink').style.display = 'flex';
-    
-    loadData();
-  } else {
-    if ($('loginPage')) $('loginPage').classList.add('on');
-    if ($('adminPage')) $('adminPage').classList.remove('on');
-    currentAdminEmail = '';
-    isSuperAdmin = false;
+/* Mode aperçu sans connexion : aucune écriture administrateur n'est permise.
+   Les règles Firebase doivent également interdire les écritures anonymes. */
+const READ_ONLY_MESSAGE = "Mode aperçu : modifications désactivées. Un contrôle serveur est nécessaire pour gérer la boutique.";
+const denyWrite = () => Promise.reject(new Error(READ_ONLY_MESSAGE));
+if ($('loginPage')) $('loginPage').classList.remove('on');
+if ($('adminPage')) $('adminPage').classList.add('on');
+if ($('sbemail')) $('sbemail').textContent = 'Aperçu sans connexion';
+if ($('sblogout')) $('sblogout').style.display = 'none';
+if ($('sbAdminLink')) $('sbAdminLink').style.display = 'none';
+const notice = document.createElement('div');
+notice.setAttribute('role', 'status');
+notice.style.cssText = 'position:sticky;top:0;z-index:9999;background:#fff0cb;color:#5b3a00;padding:12px 18px;text-align:center;font:600 13px system-ui';
+notice.textContent = READ_ONLY_MESSAGE;
+document.body.prepend(notice);
+document.addEventListener('click', event => {
+  const control = event.target.closest('button,[onclick],input[type=submit]');
+  if (!control || control.closest('#sidebar') && control.dataset.p) return;
+  if (control.closest('#adminPage') && /^(enregistrer|supprimer|ajouter|modifier|publier|valider|bannir|débloquer|confirmer|envoyer)/i.test(control.textContent.trim())) {
+    event.preventDefault(); event.stopImmediatePropagation(); toast(READ_ONLY_MESSAGE,'w');
   }
-});
-
-// Connexion
-if ($('adBtn')) {
-  $('adBtn').addEventListener('click', async () => {
-    const email = $('adEmail') ? $('adEmail').value.trim() : '';
-    const password = $('adPass') ? $('adPass').value : '';
-    
-    if ($('adErr')) $('adErr').textContent = '';
-    if (!email || !password) {
-      if ($('adErr')) $('adErr').textContent = 'Remplissez tous les champs.';
-      return;
-    }
-    
-    $('adBtn').innerHTML = '<div class="spin"></div> Connexion…';
-    
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      const errors = {
-        'auth/invalid-credential': 'Email ou mot de passe incorrect.',
-        'auth/user-not-found': 'Aucun compte avec cet email.',
-        'auth/wrong-password': 'Mot de passe incorrect.',
-        'auth/too-many-requests': 'Trop de tentatives.'
-      };
-      if ($('adErr')) $('adErr').textContent = errors[err.code] || 'Erreur de connexion.';
-      $('adBtn').innerHTML = '<i class="fas fa-lock"></i> Se connecter';
-    }
-  });
-}
-
-// Entrée pour valider
-if ($('adPass')) {
-  $('adPass').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && $('adBtn')) $('adBtn').click();
-  });
-}
-
-// Déconnexion
-if ($('sblogout')) {
-  $('sblogout').addEventListener('click', async () => {
-    await signOut(auth);
-    toast('Déconnecté.', 'i');
-  });
-}
+}, true);
 
 /* ══ SIDEBAR ══ */
 const TITLES = {
